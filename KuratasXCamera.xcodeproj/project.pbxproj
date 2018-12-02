@@ -7,15 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7216350A21B2C6B000B4BF59 /* KuratasXFaceDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7216350921B2C6B000B4BF59 /* KuratasXFaceDetector.swift */; };
 		72523B3D21AE4CED00EA7DE5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72523B3C21AE4CED00EA7DE5 /* AppDelegate.swift */; };
 		72523B3F21AE4CED00EA7DE5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72523B3E21AE4CED00EA7DE5 /* ViewController.swift */; };
 		72523B4221AE4CED00EA7DE5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 72523B4021AE4CED00EA7DE5 /* Main.storyboard */; };
 		72523B4421AE4CEE00EA7DE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72523B4321AE4CEE00EA7DE5 /* Assets.xcassets */; };
 		72523B4721AE4CEE00EA7DE5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 72523B4521AE4CEE00EA7DE5 /* LaunchScreen.storyboard */; };
-		72523B4F21AE697100EA7DE5 /* KuratasxKuratasXViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72523B4E21AE697100EA7DE5 /* KuratasxKuratasXViewController.swift */; };
+		72523B4F21AE697100EA7DE5 /* KuratasXViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72523B4E21AE697100EA7DE5 /* KuratasXViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7216350921B2C6B000B4BF59 /* KuratasXFaceDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuratasXFaceDetector.swift; sourceTree = "<group>"; };
 		72523B3921AE4CED00EA7DE5 /* KuratasXCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KuratasXCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72523B3C21AE4CED00EA7DE5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		72523B3E21AE4CED00EA7DE5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -23,7 +25,7 @@
 		72523B4321AE4CEE00EA7DE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		72523B4621AE4CEE00EA7DE5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		72523B4821AE4CEE00EA7DE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		72523B4E21AE697100EA7DE5 /* KuratasxKuratasXViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuratasxKuratasXViewController.swift; sourceTree = "<group>"; };
+		72523B4E21AE697100EA7DE5 /* KuratasXViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuratasXViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +60,8 @@
 			children = (
 				72523B3C21AE4CED00EA7DE5 /* AppDelegate.swift */,
 				72523B3E21AE4CED00EA7DE5 /* ViewController.swift */,
-				72523B4E21AE697100EA7DE5 /* KuratasxKuratasXViewController.swift */,
+				72523B4E21AE697100EA7DE5 /* KuratasXViewController.swift */,
+				7216350921B2C6B000B4BF59 /* KuratasXFaceDetector.swift */,
 				72523B4021AE4CED00EA7DE5 /* Main.storyboard */,
 				72523B4321AE4CEE00EA7DE5 /* Assets.xcassets */,
 				72523B4521AE4CEE00EA7DE5 /* LaunchScreen.storyboard */,
@@ -138,7 +141,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				72523B4F21AE697100EA7DE5 /* KuratasxKuratasXViewController.swift in Sources */,
+				72523B4F21AE697100EA7DE5 /* KuratasXViewController.swift in Sources */,
+				7216350A21B2C6B000B4BF59 /* KuratasXFaceDetector.swift in Sources */,
 				72523B3F21AE4CED00EA7DE5 /* ViewController.swift in Sources */,
 				72523B3D21AE4CED00EA7DE5 /* AppDelegate.swift in Sources */,
 			);

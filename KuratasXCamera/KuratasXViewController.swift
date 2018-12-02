@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class KuratasxKuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
+class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     var device:AVCaptureDevice?
     var input:AVCaptureInput?
     var imageOutPut:AVCapturePhotoOutput?
@@ -68,7 +68,9 @@ class KuratasxKuratasXViewController: UIViewController, AVCapturePhotoCaptureDel
         takeButton.addTarget(self, action: #selector(takePhoto), for: .touchDown)
         
         tempView.isHidden = true
-        tempView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        tempView.frame = self.view.bounds
+        tempView.backgroundColor = .yellow
+        tempView.contentMode = .scaleAspectFit
         self.view.addSubview(tempView)
     }
     @objc func takePhoto() {
@@ -78,8 +80,6 @@ class KuratasxKuratasXViewController: UIViewController, AVCapturePhotoCaptureDel
         }
         imageOutPut?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
     }
-    
-    
     //MARK: -  AVCapturePhotoCaptureDelegate
     func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         
@@ -88,12 +88,13 @@ class KuratasxKuratasXViewController: UIViewController, AVCapturePhotoCaptureDel
             return
         }else{
             if let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer!, previewPhotoSampleBuffer: previewPhotoSampleBuffer){
-                self.tempView.image = UIImage(data: imageData)
+                self.tempView.image = KuratasXFaceDetector.beginDetectorFace(image: UIImage(data: imageData)!, inFrame: self.tempView.bounds)
+//                self.tempView.image = KuratasXFaceDetector.remark(image: UIImage(data: imageData)!, to: self.tempView.bounds.size)
+
                 tempView.isHidden = false
             }
         }
     }
-    
     func showAlert() {
         let alertView = UIAlertController(title: "请打开相机权限",
                                           message: "Test",
