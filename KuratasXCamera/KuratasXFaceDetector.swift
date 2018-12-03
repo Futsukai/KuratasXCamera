@@ -12,7 +12,6 @@ class KuratasXFaceDetector: NSObject {
     
     class func beginDetectorFace(image:UIImage,inFrame:CGRect) -> UIImage {
         
-        
         let ciimage = CIImage(cgImage: remark(image: image, to: inFrame.size).cgImage!)
         let detector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy : CIDetectorAccuracyHigh])
         let features = detector?.features(in: ciimage) as! [CIFaceFeature]
@@ -25,21 +24,6 @@ class KuratasXFaceDetector: NSObject {
         transform = transform.translatedBy(x: 0.0, y: -ciimage.extent.size.height)
         
         for face in features {
-//            let temp =  face.bounds.origin.applying(transform)
-//            let faceViewBounds = CGRect(origin:CGPoint(x:  temp.x, y: temp.y * 0.5), size: face.bounds.size)
-//            context?.addRect(faceViewBounds)
-//            UIColor.red.setFill()
-//            context?.setAlpha(0.5)
-//            context?.fillPath()
-//
-//            print(ciimage.extent.size)
-//            print(face.bounds)
-//            print(faceViewBounds)
-//            print(face.leftEyePosition)
-//            print(face.leftEyePosition.applying(transform))
-//            print("............")
-            
-            
             UIColor.yellow.setFill()
             if face.hasLeftEyePosition{
                 context?.addRect(CGRect(origin: face.leftEyePosition.applying(transform), size: CGSize(width: 10, height: 10)))
@@ -70,8 +54,6 @@ class KuratasXFaceDetector: NSObject {
         image.draw(in: rect)
         let reSizeImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        print("--------------")
-        print(reSizeImage?.size)
         return reSizeImage!
     }
     
