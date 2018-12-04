@@ -14,6 +14,7 @@
 		72523B4421AE4CEE00EA7DE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72523B4321AE4CEE00EA7DE5 /* Assets.xcassets */; };
 		72523B4721AE4CEE00EA7DE5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 72523B4521AE4CEE00EA7DE5 /* LaunchScreen.storyboard */; };
 		72523B4F21AE697100EA7DE5 /* KuratasXViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72523B4E21AE697100EA7DE5 /* KuratasXViewController.swift */; };
+		72D24DCF21B654BF00497E01 /* KuratasXAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D24DCE21B654BF00497E01 /* KuratasXAlertView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		72523B4621AE4CEE00EA7DE5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		72523B4821AE4CEE00EA7DE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		72523B4E21AE697100EA7DE5 /* KuratasXViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuratasXViewController.swift; sourceTree = "<group>"; };
+		72D24DCE21B654BF00497E01 /* KuratasXAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuratasXAlertView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 				72523B3C21AE4CED00EA7DE5 /* AppDelegate.swift */,
 				72523B3E21AE4CED00EA7DE5 /* ViewController.swift */,
 				72523B4E21AE697100EA7DE5 /* KuratasXViewController.swift */,
+				72D24DCE21B654BF00497E01 /* KuratasXAlertView.swift */,
 				7216350921B2C6B000B4BF59 /* KuratasXFaceDetector.swift */,
 				72523B4021AE4CED00EA7DE5 /* Main.storyboard */,
 				72523B4321AE4CEE00EA7DE5 /* Assets.xcassets */,
@@ -142,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				72523B4F21AE697100EA7DE5 /* KuratasXViewController.swift in Sources */,
+				72D24DCF21B654BF00497E01 /* KuratasXAlertView.swift in Sources */,
 				7216350A21B2C6B000B4BF59 /* KuratasXFaceDetector.swift in Sources */,
 				72523B3F21AE4CED00EA7DE5 /* ViewController.swift in Sources */,
 				72523B3D21AE4CED00EA7DE5 /* AppDelegate.swift in Sources */,

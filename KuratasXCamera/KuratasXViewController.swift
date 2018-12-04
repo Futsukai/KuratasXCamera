@@ -11,19 +11,31 @@ import Photos
 
 class KuratasXViewController: UIViewController,
 AVCapturePhotoCaptureDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
-    var iamgeView: UIImageView?
-    var remakeBtn: UIButton?
-    var upLoadBtn: UIButton?
-    var takeButton: UIButton?
-    var switchBtn: UIButton?
-    var useImageBtn: UIButton?
+    public typealias useCallBack = (UIImage?, String?) -> Void
+
+    private var iamgeView: UIImageView?
+    private var remakeBtn: UIButton?
+    private var upLoadBtn: UIButton?
+    private var takeButton: UIButton?
+    private var switchBtn: UIButton?
+    private var useImageBtn: UIButton?
     
     private var device:AVCaptureDevice?
     private var input:AVCaptureInput?
     private var imageOutPut:AVCapturePhotoOutput?
     private var session:AVCaptureSession?
     private var previewLayer:AVCaptureVideoPreviewLayer?
+    private var imagePath:String?
+    private var callBack:useCallBack?
+
+    init(hasUseImage:@escaping useCallBack) {
+        super.init(nibName: nil, bundle: nil)
+        self.callBack = hasUseImage
+    }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -184,11 +196,15 @@ AVCapturePhotoCaptureDelegate,UIImagePickerControllerDelegate,UINavigationContro
     @objc func remakeCamera(btn:UIButton){
         if btn.isSelected {
             self.switchState(hasImage: false)
+        }else{
+            let alert = KuratasXAlertView()
+            alert.show(inView: UIApplication.shared.keyWindow!)
         }
     }
     @objc func useImage(){
         self.dismiss(animated: true) {
             debugPrint("use image")
+            self.callBack?(self.iamgeView?.image,self.imagePath)
         }
     }
     func changeCamera() {
@@ -222,12 +238,8 @@ AVCapturePhotoCaptureDelegate,UIImagePickerControllerDelegate,UINavigationContro
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true) {
             if let image = info[UIImagePickerController.InfoKey.originalImage] {
-                let rootPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-                let filePath = "\(rootPath)/KuratasXFaceImage.jpg"
-                let imageData = (image as! UIImage).jpegData(compressionQuality: 0.8)
-                FileManager.default.createFile(atPath: filePath, contents: imageData, attributes: nil)
-                debugPrint(filePath)
                 self.iamgeView?.image = (image as! UIImage)
+                self.saveImageToDocumentDirectory(image: self.iamgeView!.image! )
                 self.switchState(hasImage: true)
             }
         }
@@ -242,6 +254,7 @@ AVCapturePhotoCaptureDelegate,UIImagePickerControllerDelegate,UINavigationContro
         }else{
             if let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer!, previewPhotoSampleBuffer: previewPhotoSampleBuffer){
                 self.iamgeView!.image =  UIImage(data: imageData)!
+                saveImageToDocumentDirectory(image: self.iamgeView!.image! )
                 self.switchState(hasImage: true)
             }
         }
@@ -257,9 +270,15 @@ AVCapturePhotoCaptureDelegate,UIImagePickerControllerDelegate,UINavigationContro
         }))
         self.present(alertView, animated: true, completion: nil)
     }
-    override var prefersStatusBarHidden: Bool{
-        return true
+    func saveImageToDocumentDirectory(image:UIImage) {
+        let rootPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        let filePath = "\(rootPath)/KuratasXFaceImage.jpg"
+        let imageData = image.jpegData(compressionQuality: 0.8)
+        FileManager.default.createFile(atPath: filePath, contents: imageData, attributes: nil)
+        debugPrint(filePath)
+        self.imagePath = filePath
     }
+ 
     func switchState(hasImage:Bool) {
         if hasImage {
             remakeBtn?.isHidden = false
@@ -276,6 +295,9 @@ AVCapturePhotoCaptureDelegate,UIImagePickerControllerDelegate,UINavigationContro
             iamgeView?.image = UIImage(named: "MaskImage")
             useImageBtn?.isHidden = true
         }
+    }
+    override var prefersStatusBarHidden: Bool{
+        return true
     }
 }
 

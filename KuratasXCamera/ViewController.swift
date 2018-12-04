@@ -44,7 +44,10 @@ class ViewController: UIViewController {
         
     }
     @objc func nextGo()  {
-        self .present(KuratasXViewController(), animated: true, completion: nil)
+        self.present(KuratasXViewController(hasUseImage: { (image, path) in
+            print(image!)
+            print(path!)
+        }), animated: true, completion: nil)
     }
     func openURL() {
         if UIApplication.shared.canOpenURL(URL(string:"mtxx://")!){
