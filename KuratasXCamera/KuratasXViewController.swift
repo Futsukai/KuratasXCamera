@@ -9,13 +9,20 @@
 import UIKit
 import Photos
 
-class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
-    var device:AVCaptureDevice?
-    var input:AVCaptureInput?
-    var imageOutPut:AVCapturePhotoOutput?
-    var session:AVCaptureSession?
-    var previewLayer:AVCaptureVideoPreviewLayer?
-    let tempView = UIImageView()
+class KuratasXViewController: UIViewController,
+AVCapturePhotoCaptureDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+    var iamgeView: UIImageView?
+    var remakeBtn: UIButton?
+    var upLoadBtn: UIButton?
+    var takeButton: UIButton?
+    var switchBtn: UIButton?
+    var useImageBtn: UIButton?
+    
+    private var device:AVCaptureDevice?
+    private var input:AVCaptureInput?
+    private var imageOutPut:AVCapturePhotoOutput?
+    private var session:AVCaptureSession?
+    private var previewLayer:AVCaptureVideoPreviewLayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +81,7 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         closeBtn.frame = CGRect(x: 20, y: 14, width: 16, height: 16)
         self.view.addSubview(closeBtn)
         closeBtn.addTarget(self, action: #selector(closeCamera), for: .touchDown)
-
+        
         
         let remakeBtn = UIButton()
         remakeBtn.setImage(UIImage(named: "Issue"), for: .normal)
@@ -84,7 +91,7 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         remakeBtn.frame = CGRect(x: self.view.bounds.width - 17 - 34, y: 14, width: 34, height: 24)
         self.view.addSubview(remakeBtn)
         remakeBtn.addTarget(self, action: #selector(remakeCamera(btn:)), for: .touchDown)
-        
+        self.remakeBtn = remakeBtn
         
         let height:CGFloat  =  123.0
         let maskView = UIImageView(image: UIImage(named: "MaskImage"))
@@ -93,6 +100,7 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                                 y: lable.frame.maxY,
                                 width: self.view.bounds.width,
                                 height: self.view.bounds.height - lable.frame.maxY - height)
+        self.iamgeView = maskView
         
         
         let bottomView = UIView()
@@ -110,7 +118,8 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         bottomView.addSubview(takeButton)
         takeButton.center = bottomView.realCenter
         takeButton.addTarget(self, action: #selector(takePhoto), for: .touchDown)
-        
+        self.takeButton = takeButton
+
         
         let upLoadBtn = UIButton()
         upLoadBtn.setImage(UIImage(named: "UpImage"), for: .normal)
@@ -118,6 +127,7 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         upLoadBtn.center.y = bottomView.realCenter.y
         bottomView.addSubview(upLoadBtn)
         upLoadBtn.addTarget(self, action: #selector(upLoad), for: .touchDown)
+        self.upLoadBtn = upLoadBtn
 
         
         let switchBtn = UIButton()
@@ -126,14 +136,24 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         switchBtn.center.y = bottomView.realCenter.y
         bottomView.addSubview(switchBtn)
         switchBtn.addTarget(self, action: #selector(cameraSwitch), for: .touchDown)
-        
+        self.switchBtn = switchBtn
 
-        
-        tempView.isHidden = true
-        tempView.frame = self.view.bounds
-        tempView.backgroundColor = .yellow
-        tempView.contentMode = .scaleAspectFit
-        self.view.addSubview(tempView)
+        let useImageBtn = UIButton()
+        useImageBtn.setTitle("立即创建", for: .normal)
+        useImageBtn.frame = CGRect(x: 20, y: 0, width: self.view.bounds.width - 40, height: 50)
+        useImageBtn.center.y = bottomView.realCenter.y
+        bottomView.addSubview(useImageBtn)
+        useImageBtn.addTarget(self, action: #selector(useImage), for: .touchDown)
+        self.useImageBtn = useImageBtn
+        let gradient = CAGradientLayer()
+        gradient.startPoint = CGPoint(x: 0, y: 0)
+        gradient.endPoint = CGPoint(x: 1, y: 0)
+        gradient.frame = useImageBtn.bounds
+        gradient.colors = [UIColor.init(hexColor: "B35BFF ").cgColor,UIColor.init(hexColor: "805FED").cgColor]
+        gradient.cornerRadius = 25
+        useImageBtn.layer.insertSublayer(gradient, at: 0)
+        useImageBtn.isHidden = true
+
     }
     
     //MARK: - Btn touchDown
@@ -145,7 +165,14 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         imageOutPut?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
     }
     @objc func upLoad() {
-   
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
+            let picker = UIImagePickerController()
+            picker.delegate = self
+            picker.sourceType = .photoLibrary
+            self.present(picker, animated: true, completion: nil)
+        }else{
+            debugPrint("---------->> \(#file):\(#line) \(#function)<<---------")
+        }
     }
     @objc func cameraSwitch(){
         changeCamera()
@@ -154,25 +181,23 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @objc func closeCamera(){
         self.dismiss(animated: true, completion: nil)
     }
-    //TODO: remakeCamera is not realization
     @objc func remakeCamera(btn:UIButton){
-        btn.isSelected = !btn.isSelected
+        if btn.isSelected {
+            self.switchState(hasImage: false)
+        }
     }
-
+    @objc func useImage(){
+        self.dismiss(animated: true) {
+            debugPrint("use image")
+        }
+    }
     func changeCamera() {
-        let animation = CATransition()
-        animation.duration = 0.5
-        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        animation.type =  CATransitionType(rawValue: "oglFlip")
         let position = self.device?.position
         if  position == AVCaptureDevice.Position.front {
             device = cameraWithPosition(position: .back)
-            animation.subtype = CATransitionSubtype.fromLeft
         }else{
             device = cameraWithPosition(position: .front)
-            animation.subtype = CATransitionSubtype.fromRight
         }
-        self.previewLayer!.add(animation, forKey: nil)
         self.session?.stopRunning()
         self.session?.removeInput(input!)
         input = try? AVCaptureDeviceInput(device: device!)
@@ -182,6 +207,7 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         session?.commitConfiguration()
         session?.startRunning()
+        
     }
     func cameraWithPosition(position:AVCaptureDevice.Position) -> AVCaptureDevice? {
         let session = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: position)
@@ -192,8 +218,20 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         return nil
     }
-    
-    
+    //MARK: -  UIImagePickerControllerDelegate
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true) {
+            if let image = info[UIImagePickerController.InfoKey.originalImage] {
+                let rootPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+                let filePath = "\(rootPath)/KuratasXFaceImage.jpg"
+                let imageData = (image as! UIImage).jpegData(compressionQuality: 0.8)
+                FileManager.default.createFile(atPath: filePath, contents: imageData, attributes: nil)
+                debugPrint(filePath)
+                self.iamgeView?.image = (image as! UIImage)
+                self.switchState(hasImage: true)
+            }
+        }
+    }
     
     //MARK: -  AVCapturePhotoCaptureDelegate
     func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
@@ -203,10 +241,8 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             return
         }else{
             if let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer!, previewPhotoSampleBuffer: previewPhotoSampleBuffer){
-                self.tempView.image = KuratasXFaceDetector.beginDetectorFace(image: UIImage(data: imageData)!, inFrame: self.tempView.bounds)
-//                self.tempView.image = KuratasXFaceDetector.remark(image: UIImage(data: imageData)!, to: self.tempView.bounds.size)
-
-                tempView.isHidden = false
+                self.iamgeView!.image =  UIImage(data: imageData)!
+                self.switchState(hasImage: true)
             }
         }
     }
@@ -224,13 +260,55 @@ class KuratasXViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     override var prefersStatusBarHidden: Bool{
         return true
     }
+    func switchState(hasImage:Bool) {
+        if hasImage {
+            remakeBtn?.isHidden = false
+            remakeBtn?.isSelected = true
+            upLoadBtn?.isHidden = true
+            switchBtn?.isHidden = true
+            takeButton?.isHidden = true
+            useImageBtn?.isHidden = false
+        }else{
+            remakeBtn?.isHidden = false
+            upLoadBtn?.isHidden = false
+            switchBtn?.isHidden = false
+            takeButton?.isHidden = false
+            iamgeView?.image = UIImage(named: "MaskImage")
+            useImageBtn?.isHidden = true
+        }
+    }
 }
-
-
-
 
 extension UIView {
     var realCenter:CGPoint {
         return  self.convert(self.center, from: self.superview)
+    }
+}
+extension UIColor {
+    /// 用十六进制颜色创建UIColor
+    ///
+    /// - Parameter hexColor: 十六进制颜色 (0F0F0F)
+    convenience init(hexColor: String) {
+        // 存储转换后的数值
+        var red:UInt32 = 0, green:UInt32 = 0, blue:UInt32 = 0
+        // 分别转换进行转换
+        Scanner(string: hexColor[0..<2]).scanHexInt32(&red)
+        Scanner(string: hexColor[2..<4]).scanHexInt32(&green)
+        Scanner(string: hexColor[4..<6]).scanHexInt32(&blue)
+        self.init(red: CGFloat(red)/255.0, green: CGFloat(green)/255.0, blue: CGFloat(blue)/255.0, alpha: 1.0)
+    }
+}
+
+extension String {
+    subscript (bounds: CountableClosedRange<Int>) -> String {
+        let start = index(startIndex, offsetBy: bounds.lowerBound)
+        let end = index(startIndex, offsetBy: bounds.upperBound)
+        return String(self[start...end])
+    }
+    
+    subscript (bounds: CountableRange<Int>) -> String {
+        let start = index(startIndex, offsetBy: bounds.lowerBound)
+        let end = index(startIndex, offsetBy: bounds.upperBound)
+        return String(self[start..<end])
     }
 }
